@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./css/style.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap" rel="stylesheet"><!-- CSS only -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Les petits plats - Accueil</title>
+    </head>
+    <body class="container">
+        <!-- BANNIERE -->
+        <header>
+            <!-- LOGO-->
+            <div class="container-logo mb-3">
+                <a aria-label="Logo Les petits plats - Page d'accueil" href="./index.html" title="Page d'accueil">
+                    <img src="./assets/logo.png" alt="Les petits plats - Page accueil" class="logo" />
+                </a>
+            </div>
+            <!-- BARRE RECHERCHE PRINCIPALE -->
+            <div class="input-group rounded form-search">
+                <input class="input-search-princ form-control me-2" id="input-search" type="text" placeholder="Rechercher une recette" aria-label="Search">
+                <i class="fa-solid fa-magnifying-glass m-3 fs-4"></i>
+            </div>
+            
+        </header>
+        <main id="main">
+            <!-- TAG -->
+            <div id="wrapper-tag-btn" class="d-flex flex-wrap"></div>
+            <!-- CHAMPS DE RECHERCHE DE TAG -->
+            <section aria-label="Rechercher" class="section-search d-flex mt-5">
+                <!-- bouton et liste recherche ingredient -->
+                <button id="btn-search-ing" class="form-select1 button-search btn btn-primary me-3 fs-5 rounded" aria-label="Bouton choix ingredients" type="button">
+                    Ingrédients<i class="fa-solid fa-chevron-down float-end m-3"></i>
+                </button>
+                <div id="container-search-ing" class="container-search container-search-ing mb-2">
+                    <div class="container-input-search-ing bg-primary me-3 fs-5 rounded">
+                        <input id="input-search-ing" class="input-search-ing bg-primary" type="text" placeholder="Rechercher un ingrédient" >
+                        <i id="chevron-ing" class="fa-solid fa-chevron-up float-end m-3"></i>
+                    </div>
+                    <div id="ingredients-list" class="ingredients-list bg-primary">
+                        <ul class="container-items-ing" id="container-items-ing"></ul>
+                    </div>
+                </div>
+                 <!-- bouton et liste recherche appareil -->
+                <button id="btn-search-app" class="me-3 form-select2 button-search fs-5 rounded" aria-label="Bouton choix appareils" type="button">
+                    Appareils<i class="fa-solid fa-chevron-down float-end m-3"></i>
+                </button>
+                <div id="container-search-app" class="container-search container-search-app mb-2">
+                    <div class="container-input-search-app me-3 fs-5 rounded">
+                        <input id="input-search-app" class="input-search-app" type="text" placeholder="Rechercher un appareil">
+                        <i id="chevron-app" class="fa-solid fa-chevron-up float-end m-3"></i>
+                    </div>
+                    <div id="appliances-list" class="appliances-list">
+                        <ul class="container-items-app" id="container-items-app"></ul>
+                    </div>
+                </div>
+                 <!-- bouton et liste recherche ustensile -->
+                <button id="btn-search-ust" class="me-3 form-select3 button-search fs-5 rounded" aria-label="Bouton choix ustensiles" type="button">
+                    Ustensiles<i class="fa-solid fa-chevron-down float-end m-3"></i>
+                </button>
+                <div id="container-search-ust" class="container-search container-search-ust mb-2">
+                    <div class="container-input-search-ust me-3 fs-5 rounded">
+                        <input id="input-search-ust" class="input-search-ust" type="text" placeholder="Rechercher un ustensile">
+                        <i id="chevron-ust" class="fa-solid fa-chevron-up float-end m-3"></i>
+                    </div>
+                    <div id="ustensils-list" class="ustensils-list">
+                        <ul class="container-items-ust" id="container-items-ust"></ul>
+                    </div>
+                </div>
+            </section>
+            <!-- RECETTES -->
+            <section class="section-recipes mt-5" id="section-recipes" aria-label="Recettes"></section>
+        </main>
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <!-- Fichiers JS -->
+        <script src="./js/components/Autocompletion.js"></script>
+        <script src="./js/components/BinarySearch.js"></script>
+        <script src="./js/components/LinearSearch.js"></script>
+        <script src="./js/components/RecipesCard.js"></script>
+        <script src="./js/components/SearchField.js"></script>
+        <!-- <script src="./js/components/Tag.js"></script> -->
+        <script src="./js/components/ToResearch.js"></script>
+        <script type="module" src="./js/pages/Home.js"></script>
+        <script type="module" src="./datas/recipes.js"></script>
+    </body>
+</html>

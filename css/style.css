@@ -1,0 +1,203 @@
+@import url("card.css");
+
+
+.container-logo{
+    display: flex;
+    justify-content: center;
+}
+.logo{
+    width: 350px;
+}
+
+/* formulaire de recherche gris */
+.form-search{
+    background-color: rgb(234, 234, 234);
+    justify-content: center;
+    align-items: center;
+}
+.form-search .form-control{
+    background-color: rgb(234, 234, 234);
+    border: none;
+}
+.autocomplete-items {
+    background-color: rgb(234, 234, 234);
+    padding: 10px;
+    position: absolute;
+    top: 98%;
+    left: 1px;
+    width: 100%;
+    z-index: 2;
+}
+.autocomplete-items p:hover {
+	cursor: pointer;
+	background-color: white;
+    padding: 5px 5px;
+}
+.autocomplete-active {
+	background-color: white;
+    padding: 5px 5px;
+}
+/* boutons de recherche fermé */
+.section-search{
+    flex-wrap: wrap;
+}
+.section-search .form-select1, 
+.section-search .form-select2, 
+.section-search .form-select3{
+    border: none;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70px;
+    width: 180px;
+}
+.form-select2{
+    background-color: #00dca9;
+}
+.form-select3{
+    background-color: #ff5a47;
+}
+
+/* bouton de recherche ouvert */
+#container-search-ing,
+ #container-search-app, 
+ #container-search-ust{
+   display: none;
+   position: relative;
+}
+
+.input-search-app, .input-search-ing, .input-search-ust{
+    border: none;
+    color: white;
+    padding-left: 15px;
+    width: 100%;
+}
+/* Ingredients */
+.container-input-search-ing{
+    border: none;
+    color: white;
+    display: flex;
+        justify-content: center;
+        align-items: center;
+    height: 70px;
+    padding: 15px;
+    width: 700px;
+}
+.input-search-ing{
+    background-color: #007bff;
+}
+.input-search-ing::placeholder, 
+.input-search-app::placeholder, 
+.input-search-ust::placeholder{
+    color: white;
+}
+/* appareils */
+.container-input-search-app{
+    background-color: #00dca9;
+    border: none;
+    color: white;
+    display: flex;
+         justify-content: center;
+         align-items: center;
+    height: 70px;
+    padding: 15px;
+    width: 480px;
+}
+.input-search-app{
+    background-color: #00dca9;
+}
+
+ /* ustensiles */
+.container-input-search-ust{
+    background-color: #ff5a47;
+    border: none;
+    color: white;
+    display: flex;
+         justify-content: center;
+         align-items: center;
+    height: 70px;
+    padding: 15px;
+    width: 700px;
+}
+ .input-search-ust{
+     background-color: #ff5a47;
+}
+
+ .ingredients-list, .appliances-list, .ustensils-list{
+    border-radius: 0 0 10px 10px;
+    margin-top: -5px;
+    max-height: 420px;
+    font-size: 20px;
+    padding: 10px 10px 15px 10px;
+    position: absolute;
+    width: 700px;
+    z-index: 3;
+ }
+ .appliances-list{
+    background-color: #00dca9;
+    width: 480px;
+}
+.ustensils-list{
+     background-color: #ff5a47;
+}
+
+.container-items-ing, .container-items-app, .container-items-ust{
+    list-style-type: none;
+    color: white;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    max-width: 600px;
+    max-height: 400px;
+    overflow: hidden;
+    padding-left: 0;
+    margin: -0.5rem 0 0 0;
+    padding: 0;
+    z-index: 3;
+}
+.list-item{
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    font-weight: 400;
+    margin-right: 10px;
+    overflow: hidden;
+    padding: 5px 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 33%;
+}
+.list-item-ing:hover, .list-item-ing:focus{
+    background-color: #0053ac;
+}
+.list-item-app:hover{
+    background-color: #019b77;
+}
+.list-item-ust:hover{
+    background-color: #cb3828;
+}
+
+.tag-btn{
+    border: none;
+    border-radius: 5px;
+    color: white;
+    display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 25px;
+    height: 70px;
+    min-width: 15%;
+}
+.tag-btn-item-ing{
+    background-color: #0d6efd;
+}
+.tag-btn-item-app{
+    background-color: #00dca9;
+}
+.tag-btn-item-ust{
+    background-color: #ff5a47;
+}
+.fa-circle-xmark{
+    margin-left: 10px;
+}

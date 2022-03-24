@@ -1,0 +1,38 @@
+/* carte de recette */
+.section-recipes{
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    grid-gap: 10px;
+}
+.card-recipe{
+    background-color: #f8f9fb;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.img-recipe{
+    background-color: #c9bdbd;
+    border-radius: 10px 10px 0 0;
+    min-height: 200px;
+}
+.ingredient-recipe{
+    font-size: 13px;
+    width: 50%;
+}
+.desc-recipe{
+    font-size: 13px;
+    overflow: hidden;
+    text-align: justify;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    width: 50%;
+}
+.title-recipe{
+    flex: 2;
+    margin-right: 10px;
+}
+.time-recipe{
+    flex: 1;
+    text-align: end;
+}
