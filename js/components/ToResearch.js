@@ -9,7 +9,7 @@ class ToResearch{
             /** valeur saisie */
             var input = tagValue ? tagValue : inputValue;
             //Récupération des ids recette du mot correspondant au mot recherché
-            var ids = new BinarySearch().binarySearchMultiple(array, input.toLowerCase());
+            var ids = new LinearSearch().linearSearch(array, input.toLowerCase());
             // Si il existe des ids recette je crée un tableau avec
             if(ids){
                 for(var i = 0; i < ids.length ; i++){
