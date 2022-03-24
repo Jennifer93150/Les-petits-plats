@@ -184,3 +184,78 @@ new SearchField(choicesUst, containerItemsUst, classLi+"-ust", btnSearchUst,
     containerSearchUst, btnSearchApp, btnSearchIng, WrapperSearchFieldIng, 
     WrapperSearchFieldApp,inputSearchUst).searchFieldDisplay();
 
+/** CREATION DES TAGS 
+ * création d'un tableau qui contiendra
+ * les recettes filtrées
+*/
+var sorted = [];
+listenTag();
+
+// crée les tag
+function listenTag(){
+    // au clic sur un mot clé
+    document.addEventListener('click', (e)=>{
+        if(e.target.classList.contains('list-item')){
+            // crée un tag
+            createTag(e.target);
+            // vide la liste
+            //this._containerItems.innerHTML="";
+            // ferme la liste après un choix 
+            closeListTagAfterChoice();
+            // filtre les recettes en fonction du/des tag choisi
+            var research = new ToResearch()
+            /** Si aucunes recettes filtrées */
+            if(sorted.length == 0){
+                /** Lance la recherche avec les 50 recettes */
+                sorted = research.toResearch(e, e.target, recipesSection, recipes, keywordObjectArray);
+            }else{/** Sinon lance la recherche avec les recettes déjà filtrées */
+                sorted = research.toResearch(e, e.target, recipesSection, sorted, keywordObjectArray);
+            }
+            // supprime le tag au clic dessus
+            closeTag();
+        };
+    });
+};
+/** crée un bouton tag */
+function createTag(elt){
+    const div = document.getElementById('wrapper-tag-btn');
+    const btnTag = document.createElement('button');
+    const allStyle = getComputedStyle(elt.parentNode.parentElement);
+    btnTag.classList.add('tag-btn','fs-5', 'm-2');
+    btnTag.style.backgroundColor = allStyle.getPropertyValue("background-color");
+    var text = elt.textContent;
+    btnTag.setAttribute('id', text);
+    btnTag.innerHTML = text + " <i class='fa-regular fa-circle-xmark'></i>";
+    div.appendChild(btnTag);
+};
+/** 3: ferme la liste de tag si un tag est choisi */ 
+function closeListTagAfterChoice(){
+    const listSearch = Array.from(document.getElementsByClassName('container-search'));
+    const btnSearch = Array.from(document.getElementsByClassName('button-search'));
+    listSearch.forEach(btn=>{
+        btn.style.display="none";
+    });
+    btnSearch.forEach(btn=>{
+        btn.style.display="flex";
+    });
+}
+/** ferme le tag au clic dessus */
+function closeTag(){
+    document.addEventListener('click', (e)=>{
+        if(e.target.classList.contains('tag-btn')){
+            var tag = e.target;
+            tag.style.display='none';
+            removeFilterOfTag(tag);
+        };
+    });
+}
+// Supprime le filtrage du tag supprimé
+function removeFilterOfTag(tag){
+    var recipeCards = Array.from(document.getElementsByClassName("card-recipe"));
+    var input = tag.textContent.toLowerCase();
+    for (let i = 0; i < recipeCards.length; i++) {
+        if (recipeCards[i].hasAttribute("style") && !recipeCards[i].innerHTML.toLowerCase().includes(input)) {
+            recipeCards[i].removeAttribute("style");
+        }
+    }
+}

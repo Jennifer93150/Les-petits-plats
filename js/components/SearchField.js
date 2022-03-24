@@ -1,8 +1,6 @@
 class SearchField{
-    constructor(
-        remainingItem, containerItems, classLi, 
-        btnSearchCurrent, fieldSearchCurrent, 
-        btnSearch2, btnSearch3, list2, list3, inputCurrent) {
+    constructor(remainingItem, containerItems, classLi, btnSearchCurrent, 
+        fieldSearchCurrent, btnSearch2, btnSearch3, list2, list3, inputCurrent) {
         this._remainingItem = remainingItem;
         this._containerItems= containerItems;
         this._classLi = classLi;
@@ -15,31 +13,23 @@ class SearchField{
         this._inputCurrent = inputCurrent;
     }
     searchFieldDisplay(){
-        if(!document.getElementById('wrapper-tag-btn').hasChildNodes()){
         // Au clic sur le bouton ingredient ou appareils ou ustensils
         this._btnSearchCurrent.addEventListener('click', ()=>{
-                // ferme la liste ouverte si clic sur chevron 
-                this.closeFieldSearchCurrent();
-                //et les autres listes si ouvertes
-                this.closeOthersFieldSearch();
-                // ouvre la liste
-                this.openList();
-                
-                // !!!!!! voir cmt faire pour trier les chp apres le choix d'un tag
-                //if(!document.getElementById('wrapper-tag-btn').hasChildNodes()){
-                    // vide la liste
-                    this.emptyList();
-                    // crée une liste de tag actualisé en fonction des recettes restantes
-                    this.createListOfTagRemaining(this._remainingItem, this._containerItems, this._classLi);
-                //}
-                
-                // recup ts elts de la class item-ing, item-app, item-ust
-                const allItemsSearchField = Array.from(document.getElementsByClassName(this._classLi));
-                console.log(allItemsSearchField)
-                // Supprime les elts de la liste de tag qui ne correspondent pas à la saisie
-                this.removeItemTagList(this._inputCurrent, allItemsSearchField);
+            // ferme la liste ouverte si clic sur chevron 
+            this.closeFieldSearchCurrent();
+            //et les autres listes si ouvertes
+            this.closeOthersFieldSearch();
+            // ouvre la liste
+            this.openList();
+            // vide la liste
+            this.emptyList(this._containerItems);
+            // crée une liste de tag actualisé en fonction des recettes restantes
+            this.createListOfTagRemaining(this._remainingItem, this._containerItems, this._classLi);
+            // recup ts elts de la class item-ing, item-app, item-ust
+            const allItemsSearchField = Array.from(document.getElementsByClassName(this._classLi));
+            // Supprime les elts de la liste de tag qui ne correspondent pas à la saisie
+            this.removeItemTagList(this._inputCurrent, allItemsSearchField);
         });
-        }
     }
     /** 2: actualise la liste avec recettes présentes sur la page */
     createListOfTagRemaining(remainingItem, containerItems, classLi){
@@ -66,8 +56,8 @@ class SearchField{
         });
     }
     // 4: vide la liste (cela sert à l'actualiser par la suite ac les ing, app ou ust restants)
-    emptyList(){
-        this._containerItems.textContent="";
+    emptyList(containerItems){
+        containerItems.textContent="";
     }
     // 5: ouvre la liste de mots clés
     openList(){
@@ -107,17 +97,52 @@ class SearchField{
             this._btnSearch3.style.display='flex';
         }
     }
-    /** 10: masque mots clés de la liste des champs qui ne correspondent pas à la saisie */
+    /** 10: masque mots clés de la liste des champs qui ne correspondent pas à la saisie 
+     * paramètres: elt a écouter & liste de mots clés
+    */
     removeItemTagList(input, allItemsSearchField){
         input.addEventListener("input", function(e) {
             for (let i=0; i<allItemsSearchField.length; i++) {
+                console.log(allItemsSearchField[i])
+                /** si elt courant de la liste contient le mot saisi */
                 if (allItemsSearchField[i].textContent.toLowerCase().includes(e.target.value.toLowerCase())) {
+                    /** alors affiche le */
                     allItemsSearchField[i].removeAttribute("style");
-                } else {
+                } else {/** sinon masque le */
                     allItemsSearchField[i].style.display = "none";
                 }
             }
         });
+    }
+    /** si les ing, app ou ust des recettes ne contiennent pas elt courant de la liste alors masque le 
+     * 
+    */
+    removeItemTagList2(remainingItem, allItemsSearchField){
+        /** 1 recuperer les ingredients, app ou ust de chq recettes */
+        //recup elts html ing, app ou ust de chq recette actuellement sur la page
+        var remainingItems = Array.from(document.querySelectorAll(remainingItem));
+        // recup le texte de chq elt
+        var remainingItemsArr = [];
+        remainingItems.forEach(eltRecipe => {
+            remainingItemsArr.push(eltRecipe.textContent);
+        });
+        // supp les doublons et range par ordre alpha
+        var eltRecipes = [...new Set(remainingItemsArr)];
+        /** 2 recup elt courant de la liste = allItemsSearchField */
+        
+            for (let j=0; j < allItemsSearchField.length; j++) {
+                console.log(allItemsSearchField[j].innerHTML)
+                new LinearSearch().linearSearch2(eltRecipes, allItemsSearchField[j].innerHTML);
+                // if (eltRecipes[i].toLowerCase().includes(allItemsSearchField[j].innerHTML)) {
+                //     allItemsSearchField[j].removeAttribute("style");
+                    
+                // } else {
+                //     allItemsSearchField[j].style.display = "none";
+                // }
+            }
+        
+            
+       
     }
 }
 
