@@ -71,14 +71,25 @@ class SearchField{
     }
     /** 7: ferme liste au clic sur chevron ou input princ */
     closeFieldSearchCurrent(){
-        document.addEventListener("click", (e)=> {
-            // si clic sur chevron ou input principal
-            if (e.target.matches(".fa-chevron-up") || e.target.matches(".input-search-princ")) {
-                this._fieldSearchCurrent.style.display='none';
-                this._btnSearchCurrent.style.display='flex'; 
-                this.reinitFieldSearch();
+        document.addEventListener("click", function(e){
+            if (e.target.matches(".input-search-tag")) {
+                /** stop l'event de fermeture au clic sur input */
+                e.stopPropagation();
+                e.preventDefault();
+            }else if(e.target.matches(".fa-chevron-down")){
+                /** simule un clic sur le button (le parent du chevron) */
+                e.target.parentElement.click();
+            }else if (!e.target.matches(".btn-search")) {
+                const buttonSearch = Array.from(document.getElementsByClassName("btn-search"));
+                const containerSearch = Array.from(document.getElementsByClassName("container-search"));
+                buttonSearch.forEach(btn => {
+                    btn.removeAttribute("style")
+                });
+                containerSearch.forEach(tagField => {
+                    tagField.style.display="none"
+                });  
             }
-        });   
+        });
     }
     /** 8: réaffiche la liste de mots clés entière si fermée après que user ait choisi un mot  */
     reinitFieldSearch(){
