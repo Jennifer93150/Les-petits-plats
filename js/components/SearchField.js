@@ -69,7 +69,7 @@ class SearchField{
         this._fieldSearchCurrent.style.display='none';
         this._btnSearchCurrent.style.display='flex'; 
     }
-    /** 7: ferme liste au clic sur chevron ou input princ */
+    /** 7: ferme liste au clic sur chevron ou à l'exterieur */
     closeFieldSearchCurrent(){
         document.addEventListener("click", function(e){
             if (e.target.matches(".input-search-tag")) {
@@ -93,11 +93,11 @@ class SearchField{
     }
     /** 8: réaffiche la liste de mots clés entière si fermée après que user ait choisi un mot  */
     reinitFieldSearch(){
-        //const items = Array.from(document.getElementsByClassName(this._classLi));
+        const items = Array.from(document.getElementsByClassName(this._classLi));
         this._inputCurrent.value = "";
-        // items.forEach(item =>{
-        //     item.style.display="block";
-        // });
+        items.forEach(item =>{
+            item.style.display="block";
+        });
     }
     /** 9: ferme autres listes si ouvertes */
     closeOthersFieldSearch(){
@@ -114,7 +114,6 @@ class SearchField{
     removeItemTagList(input, allItemsSearchField){
         input.addEventListener("input", function(e) {
             for (let i=0; i<allItemsSearchField.length; i++) {
-                console.log(allItemsSearchField[i])
                 /** si elt courant de la liste contient le mot saisi */
                 if (allItemsSearchField[i].textContent.toLowerCase().includes(e.target.value.toLowerCase())) {
                     /** alors affiche le */
@@ -125,35 +124,6 @@ class SearchField{
             }
         });
     }
-    /** si les ing, app ou ust des recettes ne contiennent pas elt courant de la liste alors masque le 
-     * 
-    */
-    removeItemTagList2(remainingItem, allItemsSearchField){
-        /** 1 recuperer les ingredients, app ou ust de chq recettes */
-        //recup elts html ing, app ou ust de chq recette actuellement sur la page
-        var remainingItems = Array.from(document.querySelectorAll(remainingItem));
-        // recup le texte de chq elt
-        var remainingItemsArr = [];
-        remainingItems.forEach(eltRecipe => {
-            remainingItemsArr.push(eltRecipe.textContent);
-        });
-        // supp les doublons et range par ordre alpha
-        var eltRecipes = [...new Set(remainingItemsArr)];
-        /** 2 recup elt courant de la liste = allItemsSearchField */
-        
-            for (let j=0; j < allItemsSearchField.length; j++) {
-                console.log(allItemsSearchField[j].innerHTML)
-                new LinearSearch().linearSearch2(eltRecipes, allItemsSearchField[j].innerHTML);
-                // if (eltRecipes[i].toLowerCase().includes(allItemsSearchField[j].innerHTML)) {
-                //     allItemsSearchField[j].removeAttribute("style");
-                    
-                // } else {
-                //     allItemsSearchField[j].style.display = "none";
-                // }
-            }
-        
-            
-       
-    }
+    
 }
 

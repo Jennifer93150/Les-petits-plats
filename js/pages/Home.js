@@ -124,92 +124,80 @@ let keywordObjectArray = keywordArray(flatArrOfKeywords);
 
 /** Activation de la recherche à la saisie dans la barre principale */ 
 inputSearch.addEventListener("keyup", function(e) {
-    new ToResearch().toResearch(e, inputSearch, recipesSection, recipes, keywordObjectArray);
+    new ToResearch().toResearch(inputSearch, recipesSection, recipes, keywordObjectArray);
 });
 
 /** Création des champs de tag: ingrédient, appareils & ustensiles */
-/**
- *  INGREDIENTS (inutile pr momt)
- * Parcours tableau ingredients, recup chq elt et push ds le new tab.
- * Suppression doublons d'ingredients.
- * Création liste ds champs ingrédient.
- * Filtre les cartes recette et les listes d'ing, 
- * d'app et d'ust en fonction du mot tapé.
- * var allIngredients = [];
-    for (let i = 0; i < ingredientsArray.length; i++) {
-        for (let j = 0; j < ingredientsArray[i].length; j++) {
-            allIngredients.push(ingredientsArray[i][j].ingredient)
+createAllSearchField()
+function createAllSearchField(){
+    /**
+     *  INGREDIENTS (inutile pr momt)
+     * Parcours tableau ingredients, recup chq elt et push ds le new tab.
+     * Suppression doublons d'ingredients.
+     * Création liste ds champs ingrédient.
+     * Filtre les cartes recette et les listes d'ing, 
+     * d'app et d'ust en fonction du mot tapé.
+     * var allIngredients = [];
+        for (let i = 0; i < ingredientsArray.length; i++) {
+            for (let j = 0; j < ingredientsArray[i].length; j++) {
+                allIngredients.push(ingredientsArray[i][j].ingredient)
+            };
         };
-    };
-    const newIngredientsArray = Array.from(new Set(allIngredients));
-    const newArray = newIngredientsArray.sort();
- */
+        const newIngredientsArray = Array.from(new Set(allIngredients));
+        const newArray = newIngredientsArray.sort();
+    */
+   var choicesIng = '.ingredient';
+    new SearchField(choicesIng, containerItemsIng, classLi+"-ing", btnSearchIng, 
+        containerSearchIng, btnSearchApp, btnSearchUst, WrapperSearchFieldApp, WrapperSearchFieldUst,
+        inputSearchIng).searchFieldDisplay();
 
-var choicesIng = '.ingredient';
-new SearchField(choicesIng, containerItemsIng, classLi+"-ing", btnSearchIng, 
-    containerSearchIng, btnSearchApp, btnSearchUst, WrapperSearchFieldApp, WrapperSearchFieldUst,
-    inputSearchIng).searchFieldDisplay();
+    /**
+     * APPAREILS
+     * Suppression des doublons du tab d'appareils
+     * Création liste ds champs appareils
+     * const newAppliancesArray = Array.from(new Set(appliancesArray));
+     */
+    var choicesApp = '.appliance';
+    new SearchField(choicesApp, containerItemsApp, classLi+"-app", btnSearchApp, 
+        containerSearchApp, btnSearchIng, btnSearchUst, 
+        WrapperSearchFieldIng, WrapperSearchFieldUst,
+        inputSearchApp).searchFieldDisplay();
 
-/**
- * APPAREILS
- * Suppression des doublons du tab d'appareils
- * Création liste ds champs appareils
- * const newAppliancesArray = Array.from(new Set(appliancesArray));
- */
-var choicesApp = '.appliance';
-new SearchField(choicesApp, containerItemsApp, classLi+"-app", btnSearchApp, 
-    containerSearchApp, btnSearchIng, btnSearchUst, 
-    WrapperSearchFieldIng, WrapperSearchFieldUst,
-    inputSearchApp).searchFieldDisplay();
-
-/**
- *  USTENSILES
- * Parcours tableau d'ustensils, recup chq elt et push ds le new tab
- * Suppression doublons du tab d'ustensils
- * Création liste ds champs ustensiles
- * var allUstensils = [];
-    for (let i = 0; i < ustensilsArray.length; i++) {
-        for (let j = 0; j < ustensilsArray[i].length; j++) {
-            allUstensils.push(ustensilsArray[i][j])
+    /**
+     *  USTENSILES
+     * Parcours tableau d'ustensils, recup chq elt et push ds le new tab
+     * Suppression doublons du tab d'ustensils
+     * Création liste ds champs ustensiles
+     * var allUstensils = [];
+        for (let i = 0; i < ustensilsArray.length; i++) {
+            for (let j = 0; j < ustensilsArray[i].length; j++) {
+                allUstensils.push(ustensilsArray[i][j])
+            };
         };
-    };
-    const newUstensilsArray = Array.from(new Set(allUstensils));
-    var ustensil;
-    for(var i=0; i< newUstensilsArray.length; i++){
-        ustensil = newUstensilsArray[i];
-    };
- */
-var choicesUst ='.ustensil';
-new SearchField(choicesUst, containerItemsUst, classLi+"-ust", btnSearchUst, 
-    containerSearchUst, btnSearchApp, btnSearchIng, WrapperSearchFieldIng, 
-    WrapperSearchFieldApp,inputSearchUst).searchFieldDisplay();
+        const newUstensilsArray = Array.from(new Set(allUstensils));
+        var ustensil;
+        for(var i=0; i< newUstensilsArray.length; i++){
+            ustensil = newUstensilsArray[i];
+        };
+    */
+    var choicesUst ='.ustensil';
+    new SearchField(choicesUst, containerItemsUst, classLi+"-ust", btnSearchUst, 
+        containerSearchUst, btnSearchApp, btnSearchIng, WrapperSearchFieldIng, 
+        WrapperSearchFieldApp,inputSearchUst).searchFieldDisplay();
+}
+
 
 /** CREATION DES TAGS 
  * création d'un tableau qui contiendra
  * les recettes filtrées
 */
 var recipesSorted = [];
+var research = new ToResearch();
+var arrayTagAndItsRecipes = [];
 listenTag();
-var recipesMatched = [];
+const wrapperTag = document.getElementById('wrapper-tag-btn');
 
-function matchIngredients(recipes, ingredient) {
-    const ing = ingredient.textContent.toLowerCase();
-    for (let recipe of recipes) {
-        let ingredientsMatch = []
-        /** les recettes incluant l'ingredient */
-        ingredientsMatch.push(
-            recipe.ingredients.filter(recIngredient =>   
-                    recIngredient.ingredient.toLowerCase().includes(ing)
-            ).length > 0 
-        );
-        if (ingredientsMatch.every(match => match == true)) {
-            recipesMatched.push(recipe)
-        };
-    };
-    return recipesMatched;
-}
-
-// crée les tags
+// Ecoute si un mot clé est selectionné
 function listenTag(){
     // au clic sur un mot clé
     document.addEventListener('click', (e)=>{
@@ -217,17 +205,25 @@ function listenTag(){
             // crée un tag
             createTag(e.target);
             // filtre les recettes en fonction du/des tag choisi
-            var research = new ToResearch();
-            /** Si aucunes recettes filtrées ds le tab*/
-            if(recipesSorted.length == 0 ){
+            /** Si les recettes n'ont pas été filtrées (dc recipesSorted vide)*/
+            if(recipesSorted.length == 0){
                 /** Lance la recherche avec les 50 recettes => recipes (contient les 50 recettes)*/
-                recipesSorted = research.toResearch(e, e.target, recipesSection, recipes, keywordObjectArray);
+                recipesSorted = research.toResearch(e.target, recipesSection, recipes, keywordObjectArray);
+                arrayTagAndItsRecipes.push({
+                    "tag":e.target.textContent.toLowerCase(),
+                    "array":recipesSorted
+                });
             }else{/** Sinon lance la recherche avec les recettes déjà filtrées 
                    * sorted => contiendra des recettes filtrées car un tag aura été choisi
                    * et dc une recherche aura déjà été effectué
-                   * On effectue donc une nouvelle recherche mais en prenant en compte le premier tag choisi
+                   * On effectue donc une nouvelle recherche mais en prenant en compte les premiers tag choisi
                    */
-                recipesSorted = research.toResearch(e, e.target, recipesSection, recipesSorted, keywordObjectArray);
+                  console.log(e.target)
+                recipesSorted = research.toResearch(e.target, recipesSection, recipesSorted, keywordObjectArray);
+                arrayTagAndItsRecipes.push({
+                    "tag":e.target.textContent.toLowerCase(),
+                    "array":recipesSorted
+                });
             }
         };
         if(e.target.classList.contains('tag-btn')){
@@ -237,13 +233,14 @@ function listenTag(){
     });
 };
 /** crée un bouton tag */
-function createTag(elt){
+function createTag(tag){
+    console.log(tag)
     const div = document.getElementById('wrapper-tag-btn');
     const btnTag = document.createElement('button');
-    const allStyle = getComputedStyle(elt.parentNode.parentElement);
+    const allStyle = getComputedStyle(tag.parentNode.parentElement);
     btnTag.classList.add('tag-btn','fs-5', 'm-2');
     btnTag.style.backgroundColor = allStyle.getPropertyValue("background-color");
-    var text = elt.textContent;
+    var text = tag.textContent;
     btnTag.setAttribute('id', text);
     btnTag.innerHTML = text ;
     //+ " <i class='fa-regular fa-circle-xmark'></i>"
@@ -251,25 +248,53 @@ function createTag(elt){
 };
 
 /** ferme le tag au clic dessus */
-function closeTag(tag){
-    const wrapperTag= document.getElementById('wrapper-tag-btn')
-    if(wrapperTag.hasChildNodes(tag)){
-        wrapperTag.removeChild(tag)
-        removeFilterOfTag(tag, wrapperTag);
+function closeTag(Tag){
+    /** si tag existe */
+    if(wrapperTag.hasChildNodes(Tag)){
+        /** supprime le */
+        wrapperTag.removeChild(Tag);
+        /** recup le tag en minuscule */
+        var tagLowerCase = Tag.textContent.toLowerCase();
+        /** pr chq tag et son tab de recette */
+        for(var i=0; i < arrayTagAndItsRecipes.length; i++){
+            /**si l'elt courant du tab = au tag supprimé */
+            if(arrayTagAndItsRecipes[i].tag == tagLowerCase){
+                /** retient son id */
+                var index = arrayTagAndItsRecipes.indexOf(arrayTagAndItsRecipes[i]);
+                if (index > -1) {
+                    /** et supp le du tab */
+                    arrayTagAndItsRecipes.splice(index, 1);
+                }
+            }
+        }
+        /** reinitialise le filtre */
+        removeFilterOfTag(arrayTagAndItsRecipes);
     };
 }
-// Supprime le filtrage du tag supprimé
-function removeFilterOfTag(tag, wrapperTag){
-    if(!wrapperTag.hasChildNodes()){
-        new ToResearch().toResearch(tag, inputSearch, recipesSection, recipes, keywordObjectArray);
+// Fonction de suppression du filtre en cas de suppression d'un tag
+function removeFilterOfTag(arrayTagAndItsRecipes){
+    if(wrapperTag.childNodes.length > 1){
+        var array = [];
+        var lastTagAdded = wrapperTag.lastChild.textContent.toLowerCase();
+        console.log(lastTagAdded)
+        for(var i=0; i < arrayTagAndItsRecipes.length; i++){
+            array = arrayTagAndItsRecipes[0].array;
+        }
+        /** Lance la recherche avec les tags restants*/
+        recipesSorted = research.toResearch(lastTagAdded, recipesSection, array, keywordObjectArray);
+    }else if(wrapperTag.childNodes.length == 1){
+        recipesSorted = research.toResearch(wrapperTag.childNodes[0], recipesSection, recipes, keywordObjectArray);
+        
     }else{
-        var children = wrapperTag.childNodes;
-        for (var i = 0; i < children.length; i++) {
-            var ingredient = children[i];
-        };
-        matchIngredients(recipes, ingredient);
-        new ToResearch().toResearch(tag, inputSearch, recipesSection, recipesMatched, keywordObjectArray);
+        recipes.forEach(recipe => {
+            const recipeModel = new RecipesCard(recipe, recipe.ingredients);
+            const recipeCardDOM = recipeModel.createRecipeCard();
+            recipesSection.appendChild(recipeCardDOM);
+        });
+        createAllSearchField();
     }
 }
-
-// fonction suppression tag concernant les ingredients à voir avec appareils et ustensiles
+//     /**calcul le temps de chargement */
+    //     // console.time("search");
+    //     // console.timeEnd("search");
+// !!!!!!!! fonction suppression tag concernant les ingredients à voir avec appareils et ustensiles
