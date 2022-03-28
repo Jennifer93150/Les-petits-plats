@@ -57,27 +57,33 @@ recipes.forEach(recipe => {
     recipesSection.appendChild(recipeCardDOM);
 });
 /** Récupérer l'id, le titre, ingrédients, et description du tab recipes */
-function createArrOfKeywords(arr){
+function createArrOfKeywords(recipesArray){
 	var arrOrderedKeywords = [];
-	for (var i = 0; i < arr.length; i++) {
+	for (var i = 0; i < recipesArray.length; i++) {
         /** transforme mon ss tab ing en tab simple comportant juste les mots clés ing */
-        var onlyIngredients = arr[i].ingredients.map(x => x.ingredient.toLowerCase()).flat();
+        var onlyIngredients = recipesArray[i].ingredients.map(recipe => recipe.ingredient.toLowerCase()).flat();
+        var onlyUstensils = recipesArray[i].ustensils.map(ustensil => ustensil);
         /** reunis les infos en une seule phrase */
-        var totalRecipeWords = arr[i].name+" "+onlyIngredients+" "+arr[i].description;
-        /** coupe la phrase en +sieurs mots clés et les mets ds 1 tab */
+        var totalRecipeWords = recipesArray[i].name+" "+onlyIngredients+" "+
+                               recipesArray[i].description +" " +recipesArray[i].appliance;
+        /** coupe la phrase en +sieurs mots clés et mets les ds 1 tab */
         var keywords = [...new Set(totalRecipeWords.toLowerCase().split(/[\s,().]+/))];
-        var totalKeywords = keywords.concat(onlyIngredients);
-        var flatTotalKeywords = totalKeywords.flat();
+        /** rajoute encore les ingredients mais en mot entier*/
+        var concatOnlyIngredients = keywords.concat(onlyIngredients);
+        /** rajoute la description en entièré sans coupure */
+        var concatOnlyDescription = concatOnlyIngredients.concat(recipesArray[i].description);
+        /** rajoute les ustensiles */
+        var totalKeywords = concatOnlyDescription.concat(onlyUstensils);
         /** range par ordre alpha */
-        var orderedKeywords = flatTotalKeywords.sort();
+        var orderedKeywords = totalKeywords.sort();
         /** cree données clé, valeur */
-        var keywordsOfEachRecipe = ({ "id" : arr[i].id, "keyword": orderedKeywords});
+        var keywordsOfEachRecipe = ({ "id" : recipesArray[i].id, "keyword": orderedKeywords});
         /** push ds array */
 		arrOrderedKeywords.push(keywordsOfEachRecipe);
 	};
 	return arrOrderedKeywords;
 }
-/** crée un tab des mots clés*/
+/** crée un tab avec ts mots clés*/
 var arrOfKeywords = createArrOfKeywords(recipes);
 /** recup uniqmt propriété keyword du tab ["id":...,"keyword":...]et mettre ds new tab*/
 var allKeywords = [];
@@ -96,7 +102,7 @@ function KeywordObject(item) {
 	//item = mot clé
 	this.keyword = item;
 	let recipeIds = [];
-	for (var i=0; i<arrOfKeywords.length; i++) {
+	for (var i=0; i < arrOfKeywords.length; i++) {
 		/**si l'index du mot clé est > ou = à 0, (en gros si le mot clé est ds le tableau courant) */
 		if (arrOfKeywords[i].keyword.indexOf(item) >= 0 ) {
 			/** alors push son id ds le new tab */
@@ -122,9 +128,11 @@ let keywordObjectArray = keywordArray(flatArrOfKeywords);
  * new Autocompletion().autocomplete(inputSearch, flatArrOfKeywords, 2);
  */
 
+var recipesSorted = [];
+var research = new ToResearch();
 /** Activation de la recherche à la saisie dans la barre principale */ 
 inputSearch.addEventListener("keyup", function(e) {
-    new ToResearch().toResearch(inputSearch, recipesSection, recipes, keywordObjectArray);
+    recipesSorted = research.toResearch(e.target.value, recipesSection, recipes, keywordObjectArray);
 });
 
 /** Création des champs de tag: ingrédient, appareils & ustensiles */
@@ -186,18 +194,18 @@ function createAllSearchField(){
         WrapperSearchFieldApp,inputSearchUst).searchFieldDisplay();
 }
 
-
 /** CREATION DES TAGS 
  * création d'un tableau qui contiendra
  * les recettes filtrées
 */
-var recipesSorted = [];
-var research = new ToResearch();
+
 var arrayTagAndItsRecipes = [];
+var recipesSortedWithInputAndOneTag = [];
+var recipesSortedWithTags = [];
 listenTag();
 const wrapperTag = document.getElementById('wrapper-tag-btn');
 
-// Ecoute si un mot clé est selectionné
+// Ecoute si un mot clé dans les champs de recherche est selectionné
 function listenTag(){
     // au clic sur un mot clé
     document.addEventListener('click', (e)=>{
@@ -208,24 +216,35 @@ function listenTag(){
             /** Si les recettes n'ont pas été filtrées (dc recipesSorted vide)*/
             if(recipesSorted.length == 0){
                 /** Lance la recherche avec les 50 recettes => recipes (contient les 50 recettes)*/
-                recipesSorted = research.toResearch(e.target, recipesSection, recipes, keywordObjectArray);
+                recipesSorted = research.toResearch(e.target.textContent, recipesSection, recipes, keywordObjectArray);
+                /** création tab avec tag et leur tab de recette associé */
                 arrayTagAndItsRecipes.push({
                     "tag":e.target.textContent.toLowerCase(),
                     "array":recipesSorted
                 });
-            }else{/** Sinon lance la recherche avec les recettes déjà filtrées 
-                   * sorted => contiendra des recettes filtrées car un tag aura été choisi
-                   * et dc une recherche aura déjà été effectué
-                   * On effectue donc une nouvelle recherche mais en prenant en compte les premiers tag choisi
+            }else{
+                /** Ici recettes déjà filtrées soit par la valeur input soit par 1 tag */
+                /** si 1 tag  */
+                if(wrapperTag.childNodes.length == 1){
+                    /** lance rech. avec tab dejà trié en fonction du tag choisi */
+                    recipesSorted = research.toResearch(e.target.textContent, recipesSection, recipesSorted, keywordObjectArray);
+                    /** ce tab servira en cas de suppression d'un tag */
+                    recipesSortedWithInputAndOneTag = research.toResearch(e.target.textContent, recipesSection, recipesSorted, keywordObjectArray);
+                }
+                /** Si valeur ds input ou + qu'1 tag, lance la recherche avec les recettes déjà filtrées 
+                   * sorted => contiendra des recettes filtrées car une valeur ds input ou plusieurs tags auront été   choisi, dc une recherche aura déjà été effectué
+                   * On effectue donc une nouvelle recherche en prenant en compte les 1ers tag choisi
                    */
-                  console.log(e.target)
-                recipesSorted = research.toResearch(e.target, recipesSection, recipesSorted, keywordObjectArray);
+                recipesSorted = research.toResearch(e.target.textContent, recipesSection, recipesSorted,keywordObjectArray);
+                recipesSortedWithTags = research.toResearch(e.target.textContent, recipesSection, recipesSorted,keywordObjectArray);
+                 /** création tab avec tag et leur tab de recette associé trié*/
                 arrayTagAndItsRecipes.push({
                     "tag":e.target.textContent.toLowerCase(),
                     "array":recipesSorted
                 });
             }
-        };
+        /** si clic sur un mot clé et que l'input princ est rempli */
+        }
         if(e.target.classList.contains('tag-btn')){
             // supprime le tag au clic dessus
             closeTag(e.target);
@@ -234,7 +253,6 @@ function listenTag(){
 };
 /** crée un bouton tag */
 function createTag(tag){
-    console.log(tag)
     const div = document.getElementById('wrapper-tag-btn');
     const btnTag = document.createElement('button');
     const allStyle = getComputedStyle(tag.parentNode.parentElement);
@@ -253,7 +271,7 @@ function closeTag(Tag){
     if(wrapperTag.hasChildNodes(Tag)){
         /** supprime le */
         wrapperTag.removeChild(Tag);
-        /** recup le tag en minuscule */
+        /** recup le tag en question en minuscule */
         var tagLowerCase = Tag.textContent.toLowerCase();
         /** pr chq tag et son tab de recette */
         for(var i=0; i < arrayTagAndItsRecipes.length; i++){
@@ -273,28 +291,34 @@ function closeTag(Tag){
 }
 // Fonction de suppression du filtre en cas de suppression d'un tag
 function removeFilterOfTag(arrayTagAndItsRecipes){
-    if(wrapperTag.childNodes.length > 1){
-        var array = [];
+     var recipesUnfiltred = [];
+    /** si pas de tag à la suppr et que l'input princ est rempli*/
+    if(!wrapperTag.hasChildNodes() && inputSearch.value.length > 2){
+        /** lance rech. avec les 50 recettes en fonction de la valeur de l'input */
+        recipesUnfiltred = research.toResearch(inputSearch.value, recipesSection, recipes, keywordObjectArray);
+    /** si reste 1 ou plusieurs tag à la suppr et que l'input est rempli*/
+    }else if(wrapperTag.childNodes.length != 0 && inputSearch.value.length > 2){
+        /** lance rech. avec tab recettes filtrées pécédemment avec un tag en fonction du seul tag restant*/
+        recipesUnfiltred = research.toResearch(wrapperTag.lastChild.textContent, recipesSection, recipesSortedWithInputAndOneTag, keywordObjectArray);
+    /**si le nbr de tag est sup à 1 après la suppression d'un tag */
+    }else if(wrapperTag.childNodes.length > 1){
         var lastTagAdded = wrapperTag.lastChild.textContent.toLowerCase();
-        console.log(lastTagAdded)
         for(var i=0; i < arrayTagAndItsRecipes.length; i++){
-            array = arrayTagAndItsRecipes[0].array;
-        }
+            recipesUnfiltred = arrayTagAndItsRecipes[0].array;
+        };
         /** Lance la recherche avec les tags restants*/
-        recipesSorted = research.toResearch(lastTagAdded, recipesSection, array, keywordObjectArray);
+        recipesUnfiltred = research.toResearch(lastTagAdded, recipesSection, recipesUnfiltred, keywordObjectArray);
+    /** si à la suppression il reste 1 tag sans valeur ds input*/
     }else if(wrapperTag.childNodes.length == 1){
-        recipesSorted = research.toResearch(wrapperTag.childNodes[0], recipesSection, recipes, keywordObjectArray);
-        
-    }else{
+        /** lance rech. avec les 50 recette en fonction du tag*/
+        recipesSorted = research.toResearch(wrapperTag.childNodes[0], recipesSection, recipes, keywordObjectArray); 
+    }else{/** si rien ds input ni aucun tag, reaffiche ttes les recettes */
         recipes.forEach(recipe => {
             const recipeModel = new RecipesCard(recipe, recipe.ingredients);
             const recipeCardDOM = recipeModel.createRecipeCard();
             recipesSection.appendChild(recipeCardDOM);
         });
+        /** recreer les champs ing, app, ust */
         createAllSearchField();
     }
 }
-//     /**calcul le temps de chargement */
-    //     // console.time("search");
-    //     // console.timeEnd("search");
-// !!!!!!!! fonction suppression tag concernant les ingredients à voir avec appareils et ustensiles

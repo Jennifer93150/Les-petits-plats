@@ -1,16 +1,18 @@
 class ToResearch{
     /** Active la recherche dès qu'un mot est tapé ou un tag selectionné */
     toResearch(searchedKeyword, recipesSection, recipes, keywordObjectArray){
-        var inputValue = searchedKeyword.value;
+        var inputValue = searchedKeyword;
         var tagValue = searchedKeyword.textContent; 
-        var keyword = searchedKeyword;
         var recipesFound = [];
-        /** si mot saisie ou tag choisi sup à 2 caract*/
-        if (keyword != undefined  ||  tagValue && tagValue!=undefined || inputValue.length > 2 && inputValue!=undefined) {
+        /** si mot saisie sup à 2 caract ou tag choisi */
+        if (inputValue.length > 2 || tagValue!=undefined || tagValue!="") {
             /** valeur soit de la barre princ soit du tag*/
-            var input = tagValue ? tagValue : inputValue || keyword;
+            var input = tagValue ? tagValue : inputValue;
             //Récupération des ids recette du mot correspondant au mot recherché
+            /**calcul le temps de chargement */
+            console.time("search");
             var ids = new LinearSearch().linearSearch(keywordObjectArray, input.toLowerCase());
+            console.timeEnd("search");
             // Si il existe des ids recette, je crée un tableau avec
             if(ids){
                 for(var i = 0; i < ids.length ; i++){
