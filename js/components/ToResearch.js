@@ -1,40 +1,43 @@
 class ToResearch{
-    toResearch(e, searchedKeyword, recipesSection, recipes, array){
-        /** si mot saisie ou tag choisi sup à 2 caract */
-        var inputValue = searchedKeyword.value;
-        var tagValue = searchedKeyword.innerText; 
+    /** Active la recherche dès qu'un mot est tapé ou un tag selectionné */
+    toResearch(searchedKeyword, recipesSection, recipes, keywordObjectArray){
+        var inputValue = searchedKeyword;
+        var tagValue = searchedKeyword.textContent; 
         var recipesFound = [];
-        // voir si ajout => || tagValue
-        if (inputValue.length > 2 ) {
-            /** valeur saisie */
+        /** si mot saisie sup à 2 caract ou tag choisi */
+        if (inputValue.length > 2 || tagValue!=undefined || tagValue!="") {
+            /** valeur soit de la barre princ soit du tag*/
             var input = tagValue ? tagValue : inputValue;
             //Récupération des ids recette du mot correspondant au mot recherché
-            var ids = new BinarySearch().binarySearchMultiple(array, input.toLowerCase());
-            // Si il existe des ids recette je crée un tableau avec
+            /**calcul le temps de chargement */
+            console.time("search");
+            var ids = new BinarySearch().binarySearchMultiple(keywordObjectArray, input.toLowerCase());
+            console.timeEnd("search");
+            // Si il existe des ids recette, je crée un tableau avec
             if(ids){
                 for(var i = 0; i < ids.length ; i++){
+                    /** les ids des recettes trouvés où le mot recherché est contenu */
                     var id = ids[i];
-                    //recherche id-1 car recipes[id] correspond à la recette suivante
-                    recipesFound.push(recipes[id-1]);
+                    if(recipes.filter(r => r.id == id)[0] != undefined){
+                        /** tableau des recettes filtées;
+                         * filter: pr chq id d'une recette celui doit ê = à id trouvé
+                         * [0] permet de donner le premier elt du tab filter renvoyé
+                         */
+                        recipesFound.push(recipes.filter(r => r.id == id)[0]);
+                    };
                 }; 
-            }
-            // Vérif si tableau contient des elts
-            if (recipesFound.length > 0) {
-                // si oui créer les cartes recettes correspondantes
-                this.createCardSorted(recipesFound, recipesSection);
-            }else {// sinon renvoie un msg
-                recipesSection.innerHTML = "<p id='msg-result'>Aucune recette ne correspond à votre critère… vous pouvez chercher « tarte aux pommes », « poisson », etc.</p>";
+                new RecipesSorted(recipesFound, recipesSection).createRecipeCardsSorted();
             }
         }else {
-            this.createCardSorted(recipes, recipesSection);
+            /** sinon retourne les 50 recettes */
+            recipesSection.innerHTML = "";
+            recipes.forEach(recipe => {
+                const recipeModel = new RecipesCard(recipe, recipe.ingredients);
+                const recipeCardDOM = recipeModel.createRecipeCard();
+                recipesSection.appendChild(recipeCardDOM);
+            });
         }
-   }
-   createCardSorted(recipes, recipesSection){
-        recipesSection.innerHTML = "";
-        recipes.forEach(recipe => {
-            const recipeModel = new RecipesCard(recipe, recipe.ingredients);
-            const recipeCardDOM = recipeModel.createRecipeCard();
-            recipesSection.appendChild(recipeCardDOM);
-        });
+        /** retourne le tab de recette filtré */
+        return recipesFound;
    }
 }

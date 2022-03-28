@@ -1,6 +1,6 @@
 class RecipesCard {
-    constructor(recipe, ingredientsByRecipe, ustensilsArray) { 
-        this._recipe = recipe;
+    constructor(recipes, ingredientsByRecipe, ustensilsArray) { 
+        this._recipes = recipes;
         this._ingredientsByRecipe = ingredientsByRecipe;
         this._ustensilsArray = ustensilsArray;
     }
@@ -20,14 +20,14 @@ class RecipesCard {
          */
         divHiddenApp.classList.add('appliance');
         divHiddenApp.style.display='none';
-        divHiddenApp.innerHTML= this._recipe.appliance;
+        divHiddenApp.innerHTML= this._recipes.appliance;
         divHiddenUst.style.display='none';
         // Pr chq ustensils de chq recette 
         var ustensil =[];
-        for(var i=0; i<this._recipe.ustensils.length; i++){
+        for(var i=0; i<this._recipes.ustensils.length; i++){
             ustensil.push("<p class='mb-0'><span class='fw-bold ustensil'>"
-            +this._recipe.ustensils[i].charAt(0).toUpperCase()+
-            this._recipe.ustensils[i].slice(1)+"</span>"+"</p>");
+            +this._recipes.ustensils[i].charAt(0).toUpperCase()+
+            this._recipes.ustensils[i].slice(1)+"</span>"+"</p>");
             // retire les virgules du tableau à l'affichage
             divHiddenUst.innerHTML = ustensil.join("");
         };
@@ -64,17 +64,17 @@ class RecipesCard {
             <div class="img-recipe"></div>
             <div class="card-body">
                 <div class="d-flex align-items-center mb-3">
-                    <h5 class="title-recipe card-title mb-0">${this._recipe.name}</h5>
+                    <h5 class="title-recipe card-title mb-0">${this._recipes.name}</h5>
                     <div class="d-flex align-items-center">
                         <i class="far fa-clock fs-3  me-2"></i>
-                        <p class="time-recipe fs-4 fw-bold mb-0">${this._recipe.time} min</p>
+                        <p class="time-recipe fs-4 fw-bold mb-0">${this._recipes.time} min</p>
                     </div>
                 </div>
                 <div class="d-flex">
                     ${divText.outerHTML}
                     ${divHiddenApp.outerHTML}
                     ${divHiddenUst.outerHTML}
-                    <p class="desc-recipe">${this._recipe.description}</p>
+                    <p class="desc-recipe">${this._recipes.description}</p>
                 </div>
             </div>
         `;

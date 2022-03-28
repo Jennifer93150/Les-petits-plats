@@ -1,8 +1,6 @@
 class SearchField{
-    constructor(
-        remainingItem, containerItems, classLi, 
-        btnSearchCurrent, fieldSearchCurrent, 
-        btnSearch2, btnSearch3, list2, list3, inputCurrent) {
+    constructor(remainingItem, containerItems, classLi, btnSearchCurrent, 
+        fieldSearchCurrent, btnSearch2, btnSearch3, list2, list3, inputCurrent) {
         this._remainingItem = remainingItem;
         this._containerItems= containerItems;
         this._classLi = classLi;
@@ -15,31 +13,23 @@ class SearchField{
         this._inputCurrent = inputCurrent;
     }
     searchFieldDisplay(){
-        if(!document.getElementById('wrapper-tag-btn').hasChildNodes()){
         // Au clic sur le bouton ingredient ou appareils ou ustensils
         this._btnSearchCurrent.addEventListener('click', ()=>{
-                // ferme la liste ouverte si clic sur chevron 
-                this.closeFieldSearchCurrent();
-                //et les autres listes si ouvertes
-                this.closeOthersFieldSearch();
-                // ouvre la liste
-                this.openList();
-                
-                // !!!!!! voir cmt faire pour trier les chp apres le choix d'un tag
-                //if(!document.getElementById('wrapper-tag-btn').hasChildNodes()){
-                    // vide la liste
-                    this.emptyList();
-                    // crée une liste de tag actualisé en fonction des recettes restantes
-                    this.createListOfTagRemaining(this._remainingItem, this._containerItems, this._classLi);
-                //}
-                
-                // recup ts elts de la class item-ing, item-app, item-ust
-                const allItemsSearchField = Array.from(document.getElementsByClassName(this._classLi));
-                console.log(allItemsSearchField)
-                // Supprime les elts de la liste de tag qui ne correspondent pas à la saisie
-                this.removeItemTagList(this._inputCurrent, allItemsSearchField);
+            // ferme la liste ouverte si clic sur chevron 
+            this.closeFieldSearchCurrent();
+            //et les autres listes si ouvertes
+            this.closeOthersFieldSearch();
+            // ouvre la liste
+            this.openList();
+            // vide la liste
+            this.emptyList(this._containerItems);
+            // crée une liste de tag actualisé en fonction des recettes restantes
+            this.createListOfTagRemaining(this._remainingItem, this._containerItems, this._classLi);
+            // recup ts elts de la class item-ing, item-app, item-ust
+            const allItemsSearchField = Array.from(document.getElementsByClassName(this._classLi));
+            // Supprime les elts de la liste de tag qui ne correspondent pas à la saisie
+            this.removeItemTagList(this._inputCurrent, allItemsSearchField);
         });
-        }
     }
     /** 2: actualise la liste avec recettes présentes sur la page */
     createListOfTagRemaining(remainingItem, containerItems, classLi){
@@ -66,8 +56,8 @@ class SearchField{
         });
     }
     // 4: vide la liste (cela sert à l'actualiser par la suite ac les ing, app ou ust restants)
-    emptyList(){
-        this._containerItems.textContent="";
+    emptyList(containerItems){
+        containerItems.textContent="";
     }
     // 5: ouvre la liste de mots clés
     openList(){
@@ -79,24 +69,35 @@ class SearchField{
         this._fieldSearchCurrent.style.display='none';
         this._btnSearchCurrent.style.display='flex'; 
     }
-    /** 7: ferme liste au clic sur chevron ou input princ */
+    /** 7: ferme liste au clic sur chevron ou à l'exterieur */
     closeFieldSearchCurrent(){
-        document.addEventListener("click", (e)=> {
-            // si clic sur chevron ou input principal
-            if (e.target.matches(".fa-chevron-up") || e.target.matches(".input-search-princ")) {
-                this._fieldSearchCurrent.style.display='none';
-                this._btnSearchCurrent.style.display='flex'; 
-                this.reinitFieldSearch();
+        document.addEventListener("click", function(e){
+            if (e.target.matches(".input-search-tag")) {
+                /** stop l'event de fermeture au clic sur input */
+                e.stopPropagation();
+                e.preventDefault();
+            }else if(e.target.matches(".fa-chevron-down")){
+                /** simule un clic sur le button (le parent du chevron) */
+                e.target.parentElement.click();
+            }else if (!e.target.matches(".btn-search")) {
+                const buttonSearch = Array.from(document.getElementsByClassName("btn-search"));
+                const containerSearch = Array.from(document.getElementsByClassName("container-search"));
+                buttonSearch.forEach(btn => {
+                    btn.removeAttribute("style")
+                });
+                containerSearch.forEach(tagField => {
+                    tagField.style.display="none"
+                });  
             }
-        });   
+        });
     }
     /** 8: réaffiche la liste de mots clés entière si fermée après que user ait choisi un mot  */
     reinitFieldSearch(){
-        //const items = Array.from(document.getElementsByClassName(this._classLi));
+        const items = Array.from(document.getElementsByClassName(this._classLi));
         this._inputCurrent.value = "";
-        // items.forEach(item =>{
-        //     item.style.display="block";
-        // });
+        items.forEach(item =>{
+            item.style.display="block";
+        });
     }
     /** 9: ferme autres listes si ouvertes */
     closeOthersFieldSearch(){
@@ -107,17 +108,22 @@ class SearchField{
             this._btnSearch3.style.display='flex';
         }
     }
-    /** 10: masque mots clés de la liste des champs qui ne correspondent pas à la saisie */
+    /** 10: masque mots clés de la liste des champs qui ne correspondent pas à la saisie 
+     * paramètres: elt a écouter & liste de mots clés
+    */
     removeItemTagList(input, allItemsSearchField){
         input.addEventListener("input", function(e) {
             for (let i=0; i<allItemsSearchField.length; i++) {
+                /** si elt courant de la liste contient le mot saisi */
                 if (allItemsSearchField[i].textContent.toLowerCase().includes(e.target.value.toLowerCase())) {
+                    /** alors affiche le */
                     allItemsSearchField[i].removeAttribute("style");
-                } else {
+                } else {/** sinon masque le */
                     allItemsSearchField[i].style.display = "none";
                 }
             }
         });
     }
+    
 }
 

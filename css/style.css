@@ -1,6 +1,5 @@
 @import url("card.css");
 
-
 .container-logo{
     display: flex;
     justify-content: center;
@@ -39,23 +38,29 @@
 }
 /* boutons de recherche fermé */
 .section-search{
+    display: flex;
     flex-wrap: wrap;
 }
-.section-search .form-select1, 
-.section-search .form-select2, 
-.section-search .form-select3{
+.section-search .btn-search-ing, 
+.section-search .btn-search-app, 
+.section-search .btn-search-ust{
     border: none;
     color: white;
     display: flex;
-    justify-content: center;
-    align-items: center;
+        justify-content: center;
+        align-items: center;
     height: 70px;
+    margin-bottom: 10px;
+    padding: 10px;
     width: 180px;
 }
-.form-select2{
+.fa-chevron-down{
+    margin-left: 15px;
+}
+.btn-search-app{
     background-color: #00dca9;
 }
-.form-select3{
+.btn-search-ust{
     background-color: #ff5a47;
 }
 
@@ -73,8 +78,11 @@
     padding-left: 15px;
     width: 100%;
 }
-/* Ingredients */
-.container-input-search-ing{
+.fa-chevron-up{
+    margin: 1rem;
+}
+/* Champs de saisie des tags */
+.container-input-search{
     border: none;
     color: white;
     display: flex;
@@ -82,46 +90,31 @@
         align-items: center;
     height: 70px;
     padding: 15px;
-    width: 700px;
-}
-.input-search-ing{
-    background-color: #007bff;
 }
 .input-search-ing::placeholder, 
 .input-search-app::placeholder, 
 .input-search-ust::placeholder{
-    color: white;
+    color: rgba(255, 255, 255, 0.517);
+}
+/* Ingredients */
+.container-input-search-ing{
+    width: 640px;
+}
+.input-search-ing{
+    background-color: #007bff;
 }
 /* appareils */
 .container-input-search-app{
     background-color: #00dca9;
-    border: none;
-    color: white;
-    display: flex;
-         justify-content: center;
-         align-items: center;
-    height: 70px;
-    padding: 15px;
     width: 480px;
 }
 .input-search-app{
     background-color: #00dca9;
 }
-
  /* ustensiles */
-.container-input-search-ust{
+.container-input-search-ust, .input-search-ust{
     background-color: #ff5a47;
-    border: none;
-    color: white;
-    display: flex;
-         justify-content: center;
-         align-items: center;
-    height: 70px;
-    padding: 15px;
-    width: 700px;
-}
- .input-search-ust{
-     background-color: #ff5a47;
+    width: 640px;
 }
 
  .ingredients-list, .appliances-list, .ustensils-list{
@@ -131,7 +124,7 @@
     font-size: 20px;
     padding: 10px 10px 15px 10px;
     position: absolute;
-    width: 700px;
+    width: 640px;
     z-index: 3;
  }
  .appliances-list{
@@ -201,3 +194,54 @@
 .fa-circle-xmark{
     margin-left: 10px;
 }
+
+@media (max-width: 768px) { 
+    .section-recipes {
+        display: grid;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        grid-gap: 10px;
+    }
+}
+@media (max-width: 425px) { 
+    .section-search{
+        display: block;
+    }
+    .section-search .btn-search-ing, 
+    .section-search .btn-search-app, 
+    .section-search .btn-search-ust{
+        justify-content: start;
+        width: 100%;
+    }
+    
+    .container-input-search{
+        width: 100%;
+    }
+    .fa-chevron-down{
+        margin-left: 250px;
+    }
+    .ingredients-list, .appliances-list, .ustensils-list{
+        width: 100%;
+    }
+    .list-item {
+        width: 100%;
+    }
+    .section-recipes {
+        display: grid;
+        grid-template-columns: repeat(1,minmax(0,1fr));
+        grid-gap: 10px;
+    }
+}
+@media (max-width: 375px) { 
+    .fa-chevron-down{
+        margin-left: 200px;
+    }
+}
+@media (max-width: 320px) { 
+    .logo{
+        width: 250px;
+    }
+    .fa-chevron-down{
+        margin-left: 150px;
+    }
+}
+

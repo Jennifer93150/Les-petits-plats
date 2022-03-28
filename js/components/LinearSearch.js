@@ -1,15 +1,19 @@
+//import { recipes } from "../../datas/recipes";
+
 class LinearSearch{
   /** Recherche séquentielle (ligne par ligne) */
-    linearSearch(array, searchedKeyword){
-      var arraySorted = [];
+    linearSearch(recipes, searchedKeyword){
+      // console.log(searchedKeyword)
+      // console.log(recipes)
+      var recipesSorted = [];
       /** Pr chq elt du tab */
-      array.forEach((element, index)=>{
+      recipes.forEach((element, index)=>{
         /** verif si le mot clé courant correspond au mot recherché */
-        if(element.keyword.toLowerCase().includes(searchedKeyword.toLowerCase())){
+        if(element.keyword.toLowerCase().includes(searchedKeyword)){
           /** si oui retient ses ids recettes */
-          arraySorted.push(array[index].ids);
+          recipesSorted.push(recipes[index].ids);
         }
       });
-      return [...new Set(arraySorted.flat())];
+      return [...new Set(recipesSorted.flat())];
     }
 }
