@@ -1,17 +1,20 @@
 class ToResearch{
     /** Active la recherche dès qu'un mot est tapé ou un tag selectionné */
     toResearch(searchedKeyword, recipesSection, recipes, keywordObjectArray){
-        var inputValue = searchedKeyword;
-        var tagValue = searchedKeyword.textContent; 
+        // var inputValue = searchedKeyword;
+        // var tagValue = searchedKeyword.textContent; 
         var recipesFound = [];
-        /** si mot saisie sup à 2 caract ou tag choisi */
-        if (inputValue.length > 2 || tagValue!=undefined || tagValue!="") {
-            /** valeur soit de la barre princ soit du tag*/
-            var input = tagValue ? tagValue : inputValue;
+        /** si mot saisie sup à 2 caract ou tag choisi 
+         *  || tagValue != undefined
+         */
+        if (searchedKeyword.length > 2) {
+            /** valeur soit de la barre princ soit du tag
+             *  var input = tagValue ? tagValue : inputValue;
+             */
             //Récupération des ids recette du mot correspondant au mot recherché
             /**calcul le temps de chargement */
             console.time("search");
-            var ids = new BinarySearch().binarySearchMultiple(keywordObjectArray, input.toLowerCase());
+            var ids = new BinarySearch().binarySearchMultiple(keywordObjectArray, searchedKeyword.toLowerCase());
             console.timeEnd("search");
             // Si il existe des ids recette, je crée un tableau avec
             if(ids){
