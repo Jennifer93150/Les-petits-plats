@@ -209,7 +209,7 @@
     .section-search .btn-search-ing, 
     .section-search .btn-search-app, 
     .section-search .btn-search-ust{
-        justify-content: start;
+        justify-content: space-around;
         width: 100%;
     }
     

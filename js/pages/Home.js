@@ -127,7 +127,6 @@ let keywordObjectArray = keywordArray(flatArrOfKeywords);
  * de la valeur du mot sur lequel on clic ds la liste 
  * new Autocompletion().autocomplete(inputSearch, flatArrOfKeywords, 2);
  */
-
 var recipesSorted = [];
 var research = new ToResearch();
 /** Activation de la recherche à la saisie dans la barre principale */ 
